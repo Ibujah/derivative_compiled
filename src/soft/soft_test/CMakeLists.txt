@@ -10,5 +10,5 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/")
 
 add_executable(${EXEC_NAME} ${source_files})
 
-# target_link_libraries(${EXEC_NAME} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+target_link_libraries(${EXEC_NAME} ${SYMBCOMP_LIB})
 
