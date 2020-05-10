@@ -47,6 +47,11 @@ class Parameter : public BasisElement
 		 *  \brief Returns simplified version of element
 		 */
 		virtual BasisElement::Shared simplify() const;
+		
+		/**
+		 *  \brief Element evaluation
+		 */
+		virtual double eval(const std::vector<double>& args) const;
 };
 
 #endif // _PARAMETER_HPP_

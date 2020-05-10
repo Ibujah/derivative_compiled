@@ -36,3 +36,8 @@ BasisElement::Shared Integer::simplify() const
 {
 	return create(m_value);
 }
+
+double Integer::eval(const std::vector<double>&) const
+{
+	return (double)m_value;
+}

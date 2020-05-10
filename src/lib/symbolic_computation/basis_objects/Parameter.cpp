@@ -22,6 +22,8 @@ SOFTWARE.
 
 #include "Parameter.hpp"
 #include <memory>
+#include <stdarg.h>
+#include <stdexcept>
 
 Parameter::Parameter(int indice) : 
 	m_indice(indice)
@@ -35,4 +37,12 @@ BasisElement::Shared Parameter::create(int indice)
 BasisElement::Shared Parameter::simplify() const
 {
 	return create(m_indice);
+}
+
+double Parameter::eval(const std::vector<double>& args) const
+{
+	if(args.size() <= m_indice)
+		throw std::logic_error("Parameter::eval : Not enough arguments for this evaluation");
+
+	return args[m_indice];
 }

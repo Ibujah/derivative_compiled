@@ -24,6 +24,7 @@ SOFTWARE.
 #define _BASIS_FUNCTION_HPP_
 
 #include <memory>
+#include <vector>
 
 class BasisElement
 {
@@ -37,6 +38,11 @@ class BasisElement
 		 *  \brief Returns simplified version of element
 		 */
 		virtual Shared simplify() const = 0;
+
+		/**
+		 *  \brief Element evaluation
+		 */
+		virtual double eval(const std::vector<double>&) const = 0;
 };
 
 #endif // _BASIS_FUNCTION_HPP_

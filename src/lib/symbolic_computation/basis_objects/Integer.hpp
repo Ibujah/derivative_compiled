@@ -47,6 +47,11 @@ class Integer : public BasisElement
 		 *  \brief Returns simplified version of element
 		 */
 		virtual BasisElement::Shared simplify() const;
+		
+		/**
+		 *  \brief Element evaluation
+		 */
+		virtual double eval(const std::vector<double>&) const;
 };
 
 #endif // _INTEGER_HPP_
