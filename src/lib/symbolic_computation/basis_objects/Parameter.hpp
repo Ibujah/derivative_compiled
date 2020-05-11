@@ -52,6 +52,11 @@ class Parameter : public BasisElement
 		 *  \brief Element evaluation
 		 */
 		virtual double eval(const std::vector<double>& args) const;
+		
+		/**
+		 *  \brief Computes derivated function
+		 */
+		virtual Shared derivative(unsigned int param) const;
 };
 
 #endif // _PARAMETER_HPP_

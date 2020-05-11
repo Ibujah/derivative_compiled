@@ -20,29 +20,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Integer.hpp"
+#ifndef _EXPONENTIAL_HPP_
+#define _EXPONENTIAL_HPP_
+
+#include <symbolic_computation/basis_objects/BasisFunction.hpp>
 #include <memory>
 
-Integer::Integer(int value) : 
-	m_value(value)
-{}
-
-BasisElement::Shared Integer::create(int value)
+class Exponential : public BasisElement
 {
-	return std::unique_ptr<Integer>(new Integer(value));
-}
+	protected:
+		/// \brief Element to compose with
+		BasisElement::Shared m_comp;
 
-BasisElement::Shared Integer::simplify() const
-{
-	return create(m_value);
-}
+		/**
+		 *  \brief Constructor
+		 */
+		Exponential(const BasisElement::Shared& comp);
+	
+	public:
+		/**
+		 *  \brief Exponential creation
+		 */
+		static BasisElement::Shared create(const BasisElement::Shared& comp);
 
-double Integer::eval(const std::vector<double>&) const
-{
-	return (double)m_value;
-}
+		/**
+		 *  \brief Returns simplified version of element
+		 */
+		virtual BasisElement::Shared simplify() const;
+		
+		/**
+		 *  \brief Element evaluation
+		 */
+		virtual double eval(const std::vector<double>& param) const;
+		
+		/**
+		 *  \brief Computes derivated function
+		 */
+		virtual Shared derivative(unsigned int param) const;
+};
 
-BasisElement::Shared Integer::derivative(unsigned int param) const
-{
-	return create(0);
-}
+#endif // _EXPONENTIAL_HPP_

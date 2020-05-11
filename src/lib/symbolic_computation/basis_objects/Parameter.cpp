@@ -20,10 +20,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Parameter.hpp"
 #include <memory>
 #include <stdarg.h>
 #include <stdexcept>
+
+#include "Parameter.hpp"
+#include "Integer.hpp"
 
 Parameter::Parameter(int indice) : 
 	m_indice(indice)
@@ -31,7 +33,7 @@ Parameter::Parameter(int indice) :
 
 BasisElement::Shared Parameter::create(int indice)
 {
-	return std::shared_ptr<Parameter>(new Parameter(indice));
+	return std::unique_ptr<Parameter>(new Parameter(indice));
 }
 
 BasisElement::Shared Parameter::simplify() const
@@ -45,4 +47,12 @@ double Parameter::eval(const std::vector<double>& args) const
 		throw std::logic_error("Parameter::eval : Not enough arguments for this evaluation");
 
 	return args[m_indice];
+}
+
+BasisElement::Shared Parameter::derivative(unsigned int param) const
+{
+	if(param == m_indice)
+		return Integer::create(1);
+	
+	return Integer::create(0);
 }

@@ -20,29 +20,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Integer.hpp"
+#include "Exponential.hpp"
 #include <memory>
+#include <math.h>
+#include <stdexcept>
 
-Integer::Integer(int value) : 
-	m_value(value)
+Exponential::Exponential(const BasisElement::Shared& comp) : 
+	m_comp(comp->simplify())
 {}
 
-BasisElement::Shared Integer::create(int value)
+BasisElement::Shared Exponential::create(const BasisElement::Shared& comp)
 {
-	return std::unique_ptr<Integer>(new Integer(value));
+	return std::unique_ptr<Exponential>(new Exponential(comp));
 }
 
-BasisElement::Shared Integer::simplify() const
+BasisElement::Shared Exponential::simplify() const
 {
-	return create(m_value);
+	return create(m_comp->simplify());
 }
 
-double Integer::eval(const std::vector<double>&) const
+double Exponential::eval(const std::vector<double>& param) const
 {
-	return (double)m_value;
+	return (double)exp(m_comp->eval(param));
 }
 
-BasisElement::Shared Integer::derivative(unsigned int param) const
+BasisElement::Shared Exponential::derivative(unsigned int param) const
 {
-	return create(0);
+	throw std::logic_error("Exponential::derivative : Not implemented yet");
 }

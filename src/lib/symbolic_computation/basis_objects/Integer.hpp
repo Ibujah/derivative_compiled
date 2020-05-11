@@ -52,6 +52,11 @@ class Integer : public BasisElement
 		 *  \brief Element evaluation
 		 */
 		virtual double eval(const std::vector<double>&) const;
+		
+		/**
+		 *  \brief Computes derivated function
+		 */
+		virtual Shared derivative(unsigned int param) const;
 };
 
 #endif // _INTEGER_HPP_

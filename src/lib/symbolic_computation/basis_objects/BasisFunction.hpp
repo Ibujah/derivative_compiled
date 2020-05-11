@@ -29,7 +29,7 @@ SOFTWARE.
 class BasisElement
 {
 	public:
-		using Shared = std::shared_ptr<BasisElement>;
+		using Shared = std::unique_ptr<BasisElement>;
 
 	protected:
 
@@ -43,6 +43,11 @@ class BasisElement
 		 *  \brief Element evaluation
 		 */
 		virtual double eval(const std::vector<double>&) const = 0;
+		
+		/**
+		 *  \brief Computes derivated function
+		 */
+		virtual Shared derivative(unsigned int param) const = 0;
 };
 
 #endif // _BASIS_FUNCTION_HPP_
