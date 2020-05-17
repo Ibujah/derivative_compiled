@@ -20,46 +20,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef _EXPONENTIAL_HPP_
-#define _EXPONENTIAL_HPP_
+#include "Addition.hpp"
 
-#include <symbolic_computation/basis_objects/BasisFunction.hpp>
-#include <memory>
-
-class Exponential : public BasisElement
+Addition::Shared Addition::create()
 {
-	public:
-		using Shared = std::unique_ptr<Exponential>;
+	return Addition::Shared(new Addition());
+}
 
-	protected:
-		/// \brief Element to compose with
-		BasisElement::Shared m_comp;
-
-		/**
-		 *  \brief Constructor
-		 */
-		Exponential(const BasisElement::Shared& comp);
+BasisElement::Shared Addition::simplify() const
+{
+	auto add_simp = std::unique_ptr<Addition>(new Addition());
 	
-	public:
-		/**
-		 *  \brief Exponential creation
-		 */
-		static Exponential::Shared create(const BasisElement::Shared& comp);
+	for(auto it = m_elements.begin(); it != m_elements.end(); it++)
+	{
+		add_simp->append(*it);
+	}
+	
+	return add_simp;
+}
 
-		/**
-		 *  \brief Returns simplified version of element
-		 */
-		virtual BasisElement::Shared simplify() const;
-		
-		/**
-		 *  \brief Element evaluation
-		 */
-		virtual double eval(const std::vector<double>& param) const;
-		
-		/**
-		 *  \brief Computes derivated function
-		 */
-		virtual BasisElement::Shared derivative(unsigned int param) const;
-};
+double Addition::eval(const std::vector<double>& args) const
+{
+	double res = 0.0;
 
-#endif // _EXPONENTIAL_HPP_
+	for(auto it = m_elements.begin(); it != m_elements.end(); it++)
+	{
+		res += (*it)->eval(args);
+	}
+	
+	return res;
+}
+
+BasisElement::Shared Addition::derivative(unsigned int param) const
+{
+	auto add_der = Addition::create();
+	
+	for(auto it = m_elements.begin(); it != m_elements.end(); it++)
+	{
+		add_der->append((*it)->derivative(param));
+	}
+	
+	return add_der;
+}

@@ -31,7 +31,7 @@ Parameter::Parameter(int indice) :
 	m_indice(indice)
 {}
 
-BasisElement::Shared Parameter::create(int indice)
+Parameter::Shared Parameter::create(int indice)
 {
 	return std::unique_ptr<Parameter>(new Parameter(indice));
 }

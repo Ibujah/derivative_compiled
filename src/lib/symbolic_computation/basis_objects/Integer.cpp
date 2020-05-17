@@ -27,7 +27,7 @@ Integer::Integer(int value) :
 	m_value(value)
 {}
 
-BasisElement::Shared Integer::create(int value)
+Integer::Shared Integer::create(int value)
 {
 	return std::unique_ptr<Integer>(new Integer(value));
 }

@@ -20,41 +20,68 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef _EXPONENTIAL_HPP_
-#define _EXPONENTIAL_HPP_
+#ifndef _MULTIPLICATION_HPP_
+#define _MULTIPLICATION_HPP_
 
-#include <symbolic_computation/basis_objects/BasisFunction.hpp>
 #include <memory>
+#include <symbolic_computation/basis_objects/BasisFunction.hpp>
+#include <list>
 
-class Exponential : public BasisElement
+class Multiplication : public BasisElement
 {
 	public:
-		using Shared = std::unique_ptr<Exponential>;
+		using Shared = std::unique_ptr<Multiplication>;
 
 	protected:
-		/// \brief Element to compose with
-		BasisElement::Shared m_comp;
-
+		/// List of elements in the operation 
+		std::list<BasisElement::Shared> m_elements;
+		
 		/**
 		 *  \brief Constructor
 		 */
-		Exponential(const BasisElement::Shared& comp);
-	
+		Multiplication(){}
+
 	public:
 		/**
-		 *  \brief Exponential creation
+		 *  \brief Multiplication creation
 		 */
-		static Exponential::Shared create(const BasisElement::Shared& comp);
+		static Multiplication::Shared create();
+
+		/**
+		 *  \brief Appends an operation at the end of the list
+		 */
+		template<typename T>
+		void append(const T& element)
+		{
+			auto elt = element->simplify();
+			
+			auto ptr = elt.release();
+
+			auto commu = dynamic_cast<Multiplication*>(ptr);
+			if(commu)
+			{
+				while(!(commu->m_elements.empty()))
+				{
+					auto cur_ptr = (*(commu->m_elements.begin())).release();
+					commu->m_elements.pop_front();
+					m_elements.push_back(BasisElement::Shared(cur_ptr));
+				}
+			}
+			else
+			{
+				m_elements.push_back(BasisElement::Shared(ptr));
+			}
+		}
 
 		/**
 		 *  \brief Returns simplified version of element
 		 */
 		virtual BasisElement::Shared simplify() const;
-		
+
 		/**
 		 *  \brief Element evaluation
 		 */
-		virtual double eval(const std::vector<double>& param) const;
+		virtual double eval(const std::vector<double>&) const;
 		
 		/**
 		 *  \brief Computes derivated function
@@ -62,4 +89,7 @@ class Exponential : public BasisElement
 		virtual BasisElement::Shared derivative(unsigned int param) const;
 };
 
-#endif // _EXPONENTIAL_HPP_
+#endif // _MULTIPLICATION_HPP_
+
+
+

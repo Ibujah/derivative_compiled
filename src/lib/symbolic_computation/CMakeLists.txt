@@ -3,7 +3,9 @@ set(LIBRARY_NAME ${SYMBCOMP_LIB})
 include_directories(${CMAKE_SOURCE_DIR}/src/lib)
 set(SOURCE_FILES    basis_objects/Integer.cpp
 					basis_objects/Parameter.cpp
-					functions/Exponential.cpp)
+					functions/Exponential.cpp
+					commutative_operation/Addition.cpp
+					commutative_operation/Multiplication.cpp)
 
 # make the library
 add_library(

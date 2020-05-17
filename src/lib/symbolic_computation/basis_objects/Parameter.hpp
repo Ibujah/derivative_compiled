@@ -28,6 +28,9 @@ SOFTWARE.
 
 class Parameter : public BasisElement
 {
+	public:
+		using Shared = std::unique_ptr<Parameter>;
+
 	protected:
 		/// \brief Parameter indice
 		int m_indice;
@@ -41,7 +44,7 @@ class Parameter : public BasisElement
 		/**
 		 *  \brief Parameter creation
 		 */
-		static BasisElement::Shared create(int indice);
+		static Parameter::Shared create(int indice);
 		
 		/**
 		 *  \brief Returns simplified version of element
@@ -56,7 +59,7 @@ class Parameter : public BasisElement
 		/**
 		 *  \brief Computes derivated function
 		 */
-		virtual Shared derivative(unsigned int param) const;
+		virtual BasisElement::Shared derivative(unsigned int param) const;
 };
 
 #endif // _PARAMETER_HPP_

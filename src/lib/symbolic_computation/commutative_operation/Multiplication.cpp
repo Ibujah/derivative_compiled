@@ -20,37 +20,57 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <memory>
-#include <math.h>
-#include <stdexcept>
+#include "Multiplication.hpp"
+#include "Addition.hpp"
 
-#include "Exponential.hpp"
-#include <symbolic_computation/commutative_operation/Multiplication.hpp>
-
-Exponential::Exponential(const BasisElement::Shared& comp) : 
-	m_comp(comp->simplify())
-{}
-
-Exponential::Shared Exponential::create(const BasisElement::Shared& comp)
+Multiplication::Shared Multiplication::create()
 {
-	return std::unique_ptr<Exponential>(new Exponential(comp));
+	return Multiplication::Shared(new Multiplication());
 }
 
-BasisElement::Shared Exponential::simplify() const
+BasisElement::Shared Multiplication::simplify() const
 {
-	return create(m_comp->simplify());
+	auto mult_simp = std::unique_ptr<Multiplication>(new Multiplication());
+	
+	for(auto it = m_elements.begin(); it != m_elements.end(); it++)
+	{
+		mult_simp->append(*it);
+	}
+	
+	return mult_simp;
 }
 
-double Exponential::eval(const std::vector<double>& param) const
+double Multiplication::eval(const std::vector<double>& args) const
 {
-	return (double)exp(m_comp->eval(param));
+	double res = 1.0;
+
+	for(auto it = m_elements.begin(); it != m_elements.end(); it++)
+	{
+		res *= (*it)->eval(args);
+	}
+	
+	return res;
 }
 
-BasisElement::Shared Exponential::derivative(unsigned int param) const
+BasisElement::Shared Multiplication::derivative(unsigned int param) const
 {
-	auto mult = Multiplication::create();
-	mult->append(m_comp->derivative(param));
-	mult->append(Exponential::create(m_comp));
-
-	return mult;
+	auto add_der = Addition::create();
+	
+	for(unsigned int ind = 0; ind < m_elements.size(); ind++)
+	{
+		auto mult_der = Multiplication::create();
+		unsigned int i = 0;
+		for(auto it = m_elements.begin(); it != m_elements.end(); it++)
+		{
+			if(i == ind)
+				mult_der->append((*it)->derivative(param));
+			else
+				mult_der->append((*it));
+			i++;
+		}
+		add_der->append(mult_der);
+	}
+	
+	return add_der;
 }
+

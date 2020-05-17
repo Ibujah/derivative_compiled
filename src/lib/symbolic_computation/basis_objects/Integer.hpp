@@ -28,6 +28,9 @@ SOFTWARE.
 
 class Integer : public BasisElement
 {
+	public:
+		using Shared = std::unique_ptr<Integer>;
+
 	protected:
 		/// \brief Integer value
 		int m_value;
@@ -41,7 +44,7 @@ class Integer : public BasisElement
 		/**
 		 *  \brief Integer creation
 		 */
-		static BasisElement::Shared create(int value);
+		static Integer::Shared create(int value);
 
 		/**
 		 *  \brief Returns simplified version of element
@@ -56,7 +59,7 @@ class Integer : public BasisElement
 		/**
 		 *  \brief Computes derivated function
 		 */
-		virtual Shared derivative(unsigned int param) const;
+		virtual BasisElement::Shared derivative(unsigned int param) const;
 };
 
 #endif // _INTEGER_HPP_
