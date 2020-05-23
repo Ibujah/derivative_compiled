@@ -29,7 +29,7 @@ SOFTWARE.
 class Exponential : public BasisElement
 {
 	public:
-		using Shared = std::unique_ptr<Exponential>;
+		using Shared = std::shared_ptr<Exponential>;
 
 	protected:
 		/// \brief Element to compose with

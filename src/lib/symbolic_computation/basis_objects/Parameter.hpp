@@ -29,7 +29,7 @@ SOFTWARE.
 class Parameter : public BasisElement
 {
 	public:
-		using Shared = std::unique_ptr<Parameter>;
+		using Shared = std::shared_ptr<Parameter>;
 
 	protected:
 		/// \brief Parameter indice

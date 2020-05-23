@@ -25,12 +25,13 @@ SOFTWARE.
 
 #include <memory>
 #include <symbolic_computation/basis_objects/BasisFunction.hpp>
+#include <symbolic_computation/basis_objects/Integer.hpp>
 #include <list>
 
 class Multiplication : public BasisElement
 {
 	public:
-		using Shared = std::unique_ptr<Multiplication>;
+		using Shared = std::shared_ptr<Multiplication>;
 
 	protected:
 		/// List of elements in the operation 
@@ -55,21 +56,25 @@ class Multiplication : public BasisElement
 		{
 			auto elt = element->simplify();
 			
-			auto ptr = elt.release();
-
-			auto commu = dynamic_cast<Multiplication*>(ptr);
+			const auto commu = std::dynamic_pointer_cast<Multiplication>(elt);
+			const auto inte  = std::dynamic_pointer_cast<Integer>(elt);
 			if(commu)
 			{
-				while(!(commu->m_elements.empty()))
+				for(const auto &cur_elt : commu->m_elements)
 				{
-					auto cur_ptr = (*(commu->m_elements.begin())).release();
-					commu->m_elements.pop_front();
-					m_elements.push_back(BasisElement::Shared(cur_ptr));
+					m_elements.push_back(cur_elt->simplify());
+				}
+			}
+			else if(inte)
+			{
+				if(inte->value() != 0)
+				{
+					m_elements.push_back(elt->simplify());
 				}
 			}
 			else
 			{
-				m_elements.push_back(BasisElement::Shared(ptr));
+				m_elements.push_back(elt->simplify());
 			}
 		}
 

@@ -9,6 +9,7 @@
 int main(int argc, char** argv)
 {
 	auto Int1 = Integer::create(1);
+	auto Int0 = Integer::create(0);
 	auto Param2 = Parameter::create(2);
 	auto Param5 = Parameter::create(5);
 	auto ExpX = Exponential::create(Parameter::create(0));
@@ -16,13 +17,17 @@ int main(int argc, char** argv)
 	auto Add = Addition::create();
 	Add->append(Int1);
 	Add->append(Param2);
+	Add->append(Int1);
+	Add->simplify();
+	std::cout << "der" << std::endl;
+	auto Addder = Add->derivative(2);
 
 	std::vector<double> args{0.0, 1.0, 2.0, 3.0};
 	std::cout << Int1->eval(args) << std::endl;
 	std::cout << Param2->eval(args) << std::endl;
 	std::cout << ExpX->eval(args) << std::endl;
 	std::cout << Add->eval(args) << std::endl;
-	std::cout << Add->derivative(2)->eval(args) << std::endl;
+	std::cout << Addder->eval(args) << std::endl;
 	try
 	{
 		std::cout << Param5->eval(args) << std::endl;

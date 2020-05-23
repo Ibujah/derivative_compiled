@@ -33,7 +33,7 @@ Exponential::Exponential(const BasisElement::Shared& comp) :
 
 Exponential::Shared Exponential::create(const BasisElement::Shared& comp)
 {
-	return std::unique_ptr<Exponential>(new Exponential(comp));
+	return std::shared_ptr<Exponential>(new Exponential(comp));
 }
 
 BasisElement::Shared Exponential::simplify() const

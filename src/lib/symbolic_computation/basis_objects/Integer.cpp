@@ -29,7 +29,7 @@ Integer::Integer(int value) :
 
 Integer::Shared Integer::create(int value)
 {
-	return std::unique_ptr<Integer>(new Integer(value));
+	return std::shared_ptr<Integer>(new Integer(value));
 }
 
 BasisElement::Shared Integer::simplify() const
@@ -45,4 +45,9 @@ double Integer::eval(const std::vector<double>&) const
 BasisElement::Shared Integer::derivative(unsigned int param) const
 {
 	return create(0);
+}
+
+int Integer::value() const
+{
+	return m_value;
 }

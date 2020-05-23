@@ -29,12 +29,26 @@ Addition::Shared Addition::create()
 
 BasisElement::Shared Addition::simplify() const
 {
-	auto add_simp = std::unique_ptr<Addition>(new Addition());
+	auto add_simp = std::shared_ptr<Addition>(new Addition());
 	
-	for(auto it = m_elements.begin(); it != m_elements.end(); it++)
+	auto inte_tot = Integer::create(0);
+	
+	for(const auto &elt : m_elements)
 	{
-		add_simp->append(*it);
+		const auto inte = std::dynamic_pointer_cast<Integer>(elt);
+		if(inte)
+		{
+			inte_tot = Integer::create(inte_tot->value() + inte->value());
+		}
+		else
+		{
+			add_simp->append(elt);
+		}
 	}
+	
+	const auto inte_final = Integer::create(inte_tot->value());
+
+	add_simp->m_elements.push_front(inte_final->simplify());
 	
 	return add_simp;
 }
@@ -55,9 +69,9 @@ BasisElement::Shared Addition::derivative(unsigned int param) const
 {
 	auto add_der = Addition::create();
 	
-	for(auto it = m_elements.begin(); it != m_elements.end(); it++)
+	for(auto elt : m_elements)
 	{
-		add_der->append((*it)->derivative(param));
+		add_der->append(elt->derivative(param));
 	}
 	
 	return add_der;

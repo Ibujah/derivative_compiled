@@ -33,7 +33,7 @@ Parameter::Parameter(int indice) :
 
 Parameter::Shared Parameter::create(int indice)
 {
-	return std::unique_ptr<Parameter>(new Parameter(indice));
+	return std::shared_ptr<Parameter>(new Parameter(indice));
 }
 
 BasisElement::Shared Parameter::simplify() const

@@ -29,7 +29,7 @@ SOFTWARE.
 class BasisElement
 {
 	public:
-		using Shared = std::unique_ptr<BasisElement>;
+		using Shared = std::shared_ptr<BasisElement>;
 
 	protected:
 

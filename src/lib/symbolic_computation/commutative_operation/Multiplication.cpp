@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "Multiplication.hpp"
 #include "Addition.hpp"
+#include <memory>
 
 Multiplication::Shared Multiplication::create()
 {
@@ -30,12 +31,26 @@ Multiplication::Shared Multiplication::create()
 
 BasisElement::Shared Multiplication::simplify() const
 {
-	auto mult_simp = std::unique_ptr<Multiplication>(new Multiplication());
+	auto mult_simp = std::shared_ptr<Multiplication>(new Multiplication());
 	
-	for(auto it = m_elements.begin(); it != m_elements.end(); it++)
+	auto inte_tot = Integer::create(1);
+
+	for(const auto &elt : m_elements)
 	{
-		mult_simp->append(*it);
+		auto inte = std::dynamic_pointer_cast<Integer>(elt);
+		if(inte)
+		{
+			if(inte->value() == 0)
+				return Integer::create(0);
+			else
+				inte_tot = Integer::create(inte_tot->value() * inte->value());
+		}
+		else
+		{
+			mult_simp->append(elt->simplify());
+		}
 	}
+	mult_simp->m_elements.push_front(inte_tot->simplify());
 	
 	return mult_simp;
 }
@@ -44,9 +59,9 @@ double Multiplication::eval(const std::vector<double>& args) const
 {
 	double res = 1.0;
 
-	for(auto it = m_elements.begin(); it != m_elements.end(); it++)
+	for(const auto &elt : m_elements)
 	{
-		res *= (*it)->eval(args);
+		res *= elt->eval(args);
 	}
 	
 	return res;
